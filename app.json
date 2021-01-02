@@ -42,6 +42,11 @@
           "appId": "1:868906802036:web:1ee3bb47d4281ae0076a21",
           "measurementId": "G-4F8RWHWZ3Y"
         }
+      },
+      "build": {
+        "babel": {
+          "include": ["react-router-native"]
+        }
       }
     }
   }

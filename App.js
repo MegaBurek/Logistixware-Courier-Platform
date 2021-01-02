@@ -10,10 +10,20 @@ import * as Font from 'expo-font';
 //--Custom Components--//
 import MainLogo from "./assets/MainLogo";
 
+//--Lib--//
+import adjust from './lib/adjustSize';
+
 //--React Native Paper--//
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import { Button } from 'react-native-paper';
+
+//--React Router--//
+import { NativeRouter, Route, Link } from "react-router-native";
+import Login from "./Login";
+import Admin from "./Admin";
+
+//--React Native Elements--//
 
 const fontConfig = {
   web: {
@@ -82,21 +92,6 @@ const theme = {
   fonts: configureFonts(fontConfig)
 };
 
-const {
-  width: SCREEN_WIDTH
-} = Dimensions.get('window');
-
-const scale = SCREEN_WIDTH / 320;
-
-function normalize(size) {
-  const newSize = size * scale
-  if (Platform.OS === 'ios') {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize))
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     width: "100%",
@@ -105,22 +100,23 @@ const styles = StyleSheet.create({
   },
   appBar: {
     width: "100%",
-    height: "50px"
+    height: "10vh"
   },
   titleText: {
-    fontSize: normalize(10)
+    fontSize: adjust(50),
+    color: "white"
   },
   mainView: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "start",
     alignItems: "center",
     width: "100%",
-    height: "100%",
+    height: "90vh",
     backgroundColor: "white",
     backgroundImage: "linear-gradient(180deg, rgba(255,255,255,1) 90%, rgba(149,214,0,1) 100%);"
   },
-  linearGradient:{
+  linearGradient: {
     left: 0,
     right: 0,
     bottom: 0,
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff"
   },
   splashScreenText: {
-    fontSize: normalize(6),
+    fontSize: adjust(24),
     fontFamily: 'MyriadArabic'
   }
 });
@@ -155,7 +151,12 @@ const firebaseConfig = {
 
 export default function App() {
 
-  const [fontsLoaded, setFontsLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
+  const pixelRatio = PixelRatio.get();
+  const deviceHeight = Dimensions.get('window').height;
+  const deviceWidth = Dimensions.get('window').width;
+
 
   useEffect(async () => {
     firebase.initializeApp(firebaseConfig);
@@ -177,45 +178,42 @@ export default function App() {
     const db = firebase.firestore();
     const testRef = db.collection('tests');
     const snapshot = await testRef.get();
-    if(snapshot){
-      setFontsLoaded(true);
+    if (snapshot) {
+      setLoaded(true)
     }
   }
 
+  const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+
 
   return (
-      <PaperProvider theme={theme}>
-        {fontsLoaded ? (
-            <View style={styles.container}>
-              <Appbar.Header style={styles.appBar}>
-                <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
-                <Appbar.Action icon="magnify" onPress={() => console.log('Pressed')}/>
-                <Appbar.Action icon="dots-vertical" onPress={() => console.log('Pressed')}/>
-              </Appbar.Header>
-              <View style={styles.mainView}>
-                {/*<LinearGradient*/}
-                {/*    colors={["#ffffff", "#95d600"]}*/}
-                {/*    start={{x: 0, y: 0.9}}*/}
-                {/*    end={{x: 0, y: 1}}*/}
-                {/*    style={styles.linearGradient}*/}
-                {/*/>*/}
-                {/*<Button icon="camera" mode="contained" onPress={() => readTestCollection()} style={{width: "150px"}}>*/}
-                {/*  Get Tests*/}
-                {/*</Button>*/}
-                {/*<Button icon="camera" mode="contained" onPress={() => addTestCollection()} style={{width: "150px"}}>*/}
-                {/*  Add Test*/}
-                {/*</Button>*/}
+      <NativeRouter>
+        <PaperProvider theme={theme}>
+          {loaded ? (
+              <View style={styles.container}>
+                <Appbar.Header style={styles.appBar}>
+                  <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
+                  <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
+                  <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => console.log('Pressed')}/>
+                  <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
+                  <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
+                  <Appbar.Action icon={MORE_ICON} color="white" onPress={() => console.log('Pressed')}/>
+                </Appbar.Header>
+                <View style={styles.mainView}>
+                  <Route exact path="/" component={Login} />
+                  <Route exact path="/admin" component={Admin} />
+                </View>
               </View>
-            </View>
-        ) : (
-            // splash screen goes here
-            <View style={styles.splashScreen}>
-              <MainLogo/>
-              <Text style={styles.splashScreenText}>Courier Platform</Text>
-              <ActivityIndicator size="large" color="#95d600"/>
-            </View>
-        )}
+          ) : (
+              // splash screen goes here
+              <View style={styles.splashScreen}>
+                <MainLogo/>
+                <Text style={styles.splashScreenText}>Courier Platform</Text>
+                <ActivityIndicator size="large" color="#95d600"/>
+              </View>
+          )}
 
-      </PaperProvider>
+        </PaperProvider>
+      </NativeRouter>
   );
 }
