@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { configureFonts, DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { Appbar } from "react-native-paper";
-import * as Font from 'expo-font';
-import { Button } from 'react-native-paper';
 import * as firebase from 'firebase';
+import { StyleSheet, Text, View, ActivityIndicator, Dimensions, Platform, PixelRatio } from "react-native";
+
+//--Custom NPM Packages--//
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Font from 'expo-font';
+
+//--Custom Components--//
+import MainLogo from "./assets/MainLogo";
+
+//--React Native Paper--//
+import { configureFonts, DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import { Appbar } from "react-native-paper";
+import { Button } from 'react-native-paper';
 
 const fontConfig = {
   web: {
@@ -75,6 +82,21 @@ const theme = {
   fonts: configureFonts(fontConfig)
 };
 
+const {
+  width: SCREEN_WIDTH
+} = Dimensions.get('window');
+
+const scale = SCREEN_WIDTH / 320;
+
+function normalize(size) {
+  const newSize = size * scale
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     width: "100%",
@@ -86,7 +108,7 @@ const styles = StyleSheet.create({
     height: "50px"
   },
   titleText: {
-    fontSize: RFPercentage(3)
+    fontSize: normalize(10)
   },
   mainView: {
     display: "flex",
@@ -96,7 +118,27 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: "white",
-    background: "linear-gradient(90deg, rgba(255,255,255,1) 90%, rgba(149,214,0,1) 100%);"
+    backgroundImage: "linear-gradient(180deg, rgba(255,255,255,1) 90%, rgba(149,214,0,1) 100%);"
+  },
+  linearGradient:{
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: "100%",
+    height: "100%"
+  },
+  splashScreen: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff"
+  },
+  splashScreenText: {
+    fontSize: normalize(6),
+    fontFamily: 'MyriadArabic'
   }
 });
 
@@ -120,7 +162,7 @@ export default function App() {
     await Font.loadAsync({
       MyriadArabic: require('./assets/fonts/MyArabicBoldItalic.ttf')
     })
-    setFontsLoaded(true);
+    await readTestCollection();
   }, [])
 
   const addTestCollection = () => {
@@ -135,9 +177,9 @@ export default function App() {
     const db = firebase.firestore();
     const testRef = db.collection('tests');
     const snapshot = await testRef.get();
-    snapshot.forEach(doc => {
-      console.log(doc.id, '=>', doc.data());
-    });
+    if(snapshot){
+      setFontsLoaded(true);
+    }
   }
 
 
@@ -150,25 +192,27 @@ export default function App() {
                 <Appbar.Action icon="magnify" onPress={() => console.log('Pressed')}/>
                 <Appbar.Action icon="dots-vertical" onPress={() => console.log('Pressed')}/>
               </Appbar.Header>
-              <LinearGradient
-                  colors={["#ffffff", "#95d600"]}
-                  start={[0.9, 1.0]}
-                  style={{width: "100%", height: "100%"}}
-              >
-                <View style={styles.mainView}>
-                  {/*<Button icon="camera" mode="contained" onPress={() => readTestCollection()} style={{width: "150px"}}>*/}
-                  {/*  Get Tests*/}
-                  {/*</Button>*/}
-                  {/*<Button icon="camera" mode="contained" onPress={() => addTestCollection()} style={{width: "150px"}}>*/}
-                  {/*  Add Test*/}
-                  {/*</Button>*/}
-                </View>
-              </LinearGradient>
+              <View style={styles.mainView}>
+                {/*<LinearGradient*/}
+                {/*    colors={["#ffffff", "#95d600"]}*/}
+                {/*    start={{x: 0, y: 0.9}}*/}
+                {/*    end={{x: 0, y: 1}}*/}
+                {/*    style={styles.linearGradient}*/}
+                {/*/>*/}
+                {/*<Button icon="camera" mode="contained" onPress={() => readTestCollection()} style={{width: "150px"}}>*/}
+                {/*  Get Tests*/}
+                {/*</Button>*/}
+                {/*<Button icon="camera" mode="contained" onPress={() => addTestCollection()} style={{width: "150px"}}>*/}
+                {/*  Add Test*/}
+                {/*</Button>*/}
+              </View>
             </View>
         ) : (
             // splash screen goes here
-            <View>
-              <Text>Fonts not loaded</Text>
+            <View style={styles.splashScreen}>
+              <MainLogo/>
+              <Text style={styles.splashScreenText}>Courier Platform</Text>
+              <ActivityIndicator size="large" color="#95d600"/>
             </View>
         )}
 

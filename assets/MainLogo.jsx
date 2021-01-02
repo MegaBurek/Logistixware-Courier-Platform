@@ -1,13 +1,16 @@
 import * as React from "react"
 import Svg, { G, Path } from "react-native-svg"
+import { Dimensions } from "react-native"
 
 function MainLogo(props) {
+  const {width} = Dimensions.get('window');
   return (
       <Svg
           xmlns="http://www.w3.org/2000/svg"
-          width={407}
-          height={87}
+          width={width * 0.2}
+          height={80}
           viewBox="0 0 4070 870"
+          style={{overflow: 'visible'}}
           {...props}
       >
         <G fill="#681437">
