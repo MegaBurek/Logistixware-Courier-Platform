@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "868906802036",
+    "project_id": "logistixware-86caa",
+    "storage_bucket": "logistixware-86caa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868906802036:android:30ef1f5d1c79a6a2076a21",
+        "android_client_info": {
+          "package_name": "com.logistixware.courier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868906802036-e1jb7dp3uj3buic7pfjufogh05tsvckm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA9sowC9llUV1I7tzHqWpq5ElUlw1eK1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868906802036-e1jb7dp3uj3buic7pfjufogh05tsvckm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,16 +17,32 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.logistixware.courier",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.logistixware.courier",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyCgNV1Y2b2i_a_Yn_tQkTaU3dOlzyP6OC0",
+          "authDomain": "logistixware-86caa.firebaseapp.com",
+          "databaseURL": "https://logistixware-86caa-default-rtdb.europe-west1.firebasedatabase.app",
+          "projectId": "logistixware-86caa",
+          "storageBucket": "logistixware-86caa.appspot.com",
+          "messagingSenderId": "868906802036",
+          "appId": "1:868906802036:web:1ee3bb47d4281ae0076a21",
+          "measurementId": "G-4F8RWHWZ3Y"
+        }
+      }
     }
   }
 }
