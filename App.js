@@ -3,8 +3,6 @@ import * as firebase from 'firebase';
 import { StyleSheet, Text, View, ActivityIndicator, Dimensions, Platform, PixelRatio } from "react-native";
 
 //--Custom NPM Packages--//
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Font from 'expo-font';
 
 //--Custom Components--//
@@ -16,14 +14,13 @@ import adjust from './lib/adjustSize';
 //--React Native Paper--//
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { Appbar } from "react-native-paper";
-import { Button } from 'react-native-paper';
+import { Menu } from 'react-native-paper';
 
 //--React Router--//
 import { NativeRouter, Route, Link } from "react-router-native";
 import Login from "./Login";
 import Admin from "./Admin";
-
-//--React Native Elements--//
+import Register from "./Register";
 
 const fontConfig = {
   web: {
@@ -96,7 +93,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    flexDirection: 'column'
+    flexDirection: 'column',
+    overflowY: "hidden"
   },
   appBar: {
     width: "100%",
@@ -152,6 +150,11 @@ const firebaseConfig = {
 export default function App() {
 
   const [loaded, setLoaded] = useState(false)
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
 
   const pixelRatio = PixelRatio.get();
   const deviceHeight = Dimensions.get('window').height;
@@ -197,11 +200,20 @@ export default function App() {
                   <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => console.log('Pressed')}/>
                   <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
                   <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
-                  <Appbar.Action icon={MORE_ICON} color="white" onPress={() => console.log('Pressed')}/>
+                  <Menu
+                      visible={visible}
+                      onDismiss={closeMenu}
+                      anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
+                    <Menu.Item icon="truck" onPress={() => {}} title="Trucks" />
+                    <Menu.Item icon="card-account-details-outline" onPress={() => {}} title="Drivers" />
+                    <Menu.Item icon="package-variant" onPress={() => {}} title="Collections" />
+                    <Menu.Item icon="package-variant-closed" onPress={() => {}} title="Closed Collections" />
+                  </Menu>
                 </Appbar.Header>
                 <View style={styles.mainView}>
-                  <Route exact path="/" component={Login} />
-                  <Route exact path="/admin" component={Admin} />
+                  <Route exact path="/" component={Login}/>
+                  <Route path="/register" component={Register}/>
+                  <Route path="/admin" component={Admin}/>
                 </View>
               </View>
           ) : (

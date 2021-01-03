@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   textInput: {
-    height: "50px",
+    height: "50",
     marginBottom: "5px"
   }
 });
@@ -45,16 +45,8 @@ function Login(props) {
         });
   }
 
-  const register = () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-          console.log(user)
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(errorCode, " ", errorMessage)
-        });
+  const toRegister = () => {
+    history.push("/register");
   }
 
   return (
@@ -78,7 +70,7 @@ function Login(props) {
         </Card.Content>
         <Card.Actions>
           <Button mode="contained" icon="login-variant" style={styles.button} onPress={() => login()}>Login</Button>
-          <Button mode="outlined" icon="account-plus" style={styles.button} onPress={() => register()}>Register</Button>
+          <Button mode="outlined" icon="account-plus" style={styles.button} onPress={() => toRegister()}>Register</Button>
         </Card.Actions>
       </Card>
   );

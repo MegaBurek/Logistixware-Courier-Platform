@@ -1,0 +1,28 @@
+Shipper Details
+a) shipper full name
+b) full address
+c) full telephone number
+d) alternative number
+e) contact person
+f) alternative contact person
+g) details of package:
+    (i) item description
+    (ii) pieces
+    (iii) weight
+    (iv) dimensions
+h) shipper custom exporter code
+i) Special instructions
+j) Ready time
+k) Closing time
+
+Reciever Details
+a) Reciever name
+b) Reciever physical delivery address
+c) Reciever telephone number
+d) Contact person
+e) Reciever email
+f) Confirm email
+
+Payment Details
+a) Who pays? Reciever or Sender
+b) Account number
