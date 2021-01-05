@@ -21,6 +21,7 @@ import { NativeRouter, Route, Link } from "react-router-native";
 import Login from "./Login";
 import Admin from "./Admin";
 import Register from "./Register";
+import UserContext from "./context/UserContext/UserContext";
 
 const fontConfig = {
   web: {
@@ -190,42 +191,48 @@ export default function App() {
 
 
   return (
-      <NativeRouter>
-        <PaperProvider theme={theme}>
-          {loaded ? (
-              <View style={styles.container}>
-                <Appbar.Header style={styles.appBar}>
-                  <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
-                  <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
-                  <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => console.log('Pressed')}/>
-                  <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
-                  <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
-                  <Menu
-                      visible={visible}
-                      onDismiss={closeMenu}
-                      anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
-                    <Menu.Item icon="truck" onPress={() => {}} title="Trucks" />
-                    <Menu.Item icon="card-account-details-outline" onPress={() => {}} title="Drivers" />
-                    <Menu.Item icon="package-variant" onPress={() => {}} title="Collections" />
-                    <Menu.Item icon="package-variant-closed" onPress={() => {}} title="Closed Collections" />
-                  </Menu>
-                </Appbar.Header>
-                <View style={styles.mainView}>
-                  <Route exact path="/" component={Login}/>
-                  <Route path="/register" component={Register}/>
-                  <Route path="/admin" component={Admin}/>
+      <UserContext>
+        <NativeRouter>
+          <PaperProvider theme={theme}>
+            {loaded ? (
+                <View style={styles.container}>
+                  <Appbar.Header style={styles.appBar}>
+                    <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
+                    <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
+                    <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => console.log('Pressed')}/>
+                    <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
+                    <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
+                    <Menu
+                        visible={visible}
+                        onDismiss={closeMenu}
+                        anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
+                      <Menu.Item icon="truck" onPress={() => {
+                      }} title="Trucks"/>
+                      <Menu.Item icon="card-account-details-outline" onPress={() => {
+                      }} title="Drivers"/>
+                      <Menu.Item icon="package-variant" onPress={() => {
+                      }} title="Collections"/>
+                      <Menu.Item icon="package-variant-closed" onPress={() => {
+                      }} title="Closed Collections"/>
+                    </Menu>
+                  </Appbar.Header>
+                  <View style={styles.mainView}>
+                    <Route exact path="/" component={Login}/>
+                    <Route path="/register" component={Register}/>
+                    <Route path="/admin" component={Admin}/>
+                  </View>
                 </View>
-              </View>
-          ) : (
-              // splash screen goes here
-              <View style={styles.splashScreen}>
-                <MainLogo/>
-                <Text style={styles.splashScreenText}>Courier Platform</Text>
-                <ActivityIndicator size="large" color="#95d600"/>
-              </View>
-          )}
+            ) : (
+                // splash screen goes here
+                <View style={styles.splashScreen}>
+                  <MainLogo/>
+                  <Text style={styles.splashScreenText}>Courier Platform</Text>
+                  <ActivityIndicator size="large" color="#95d600"/>
+                </View>
+            )}
 
-        </PaperProvider>
-      </NativeRouter>
+          </PaperProvider>
+        </NativeRouter>
+      </UserContext>
   );
 }

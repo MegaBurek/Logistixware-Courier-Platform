@@ -30,12 +30,18 @@ function Register(props) {
 
   let history = useHistory();
 
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [number, setNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepassword] = useState("");
+  const [userState, setUserState] = useState({
+    name : '',
+    surname : '',
+    number : '',
+    email: '',
+    password: '',
+    repeatPassword : ''
+  });
+
+  const handleChange = event => {
+    setUserState({[event.target.name]:event.target.value})
+  }
 
   const [visible, setVisible] = useState(false);
 
@@ -43,15 +49,15 @@ function Register(props) {
 
   const register = () => {
     const db = firebase.firestore();
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    firebase.auth().createUserWithEmailAndPassword(userState.email, userState.password)
         .then((user) => {
           const userRef = db.collection('users').add({
             id: user.user.uid,
-            name: name,
-            surname: surname,
-            number: number,
-            email: email,
-            password: password
+            name: userState.name,
+            surname: userState.surname,
+            number: userState.number,
+            email: userState.email,
+            password: userState.password
           });
           setVisible(!visible);
         })

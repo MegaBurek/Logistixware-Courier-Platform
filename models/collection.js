@@ -2,6 +2,8 @@ import { Package } from "./package";
 
 export class Collection {
   uid : string;
+  orderDate : Date;
+  active : Boolean;
   shipperFullName : string;
   fullAddress : string;
   fullTelephoneNumber : string;
