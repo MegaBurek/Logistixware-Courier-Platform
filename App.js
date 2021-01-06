@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as firebase from 'firebase';
 import { StyleSheet, Text, View, ActivityIndicator, Dimensions, Platform, PixelRatio } from "react-native";
 
@@ -21,7 +21,10 @@ import { NativeRouter, Route, Link } from "react-router-native";
 import Login from "./Login";
 import Admin from "./Admin";
 import Register from "./Register";
-import UserContext from "./context/UserContext/UserContext";
+import UserProvider from "./context/UserContext/UserProvider";
+import SnackbarProvider from "./context/SnackbarContext/SnackbarProviderr";
+import SnackbarContainer from "./context/SnackbarContext/SnackbarContainer";
+import SnackbarContext from "./context/SnackbarContext/SnackbarContext";
 
 const fontConfig = {
   web: {
@@ -151,7 +154,9 @@ const firebaseConfig = {
 export default function App() {
 
   const [loaded, setLoaded] = useState(false)
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
+
+  const snackbarContext = useContext(SnackbarContext);
 
   const openMenu = () => setVisible(true);
 
@@ -178,6 +183,11 @@ export default function App() {
     console.log(userRef)
   }
 
+  const testNotification = () => {
+    console.log("clicked")
+    snackbarContext.showNotification("update","success")
+  }
+
   const readTestCollection = async () => {
     const db = firebase.firestore();
     const testRef = db.collection('tests');
@@ -191,48 +201,51 @@ export default function App() {
 
 
   return (
-      <UserContext>
-        <NativeRouter>
-          <PaperProvider theme={theme}>
-            {loaded ? (
-                <View style={styles.container}>
-                  <Appbar.Header style={styles.appBar}>
-                    <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
-                    <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
-                    <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => console.log('Pressed')}/>
-                    <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
-                    <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
-                    <Menu
-                        visible={visible}
-                        onDismiss={closeMenu}
-                        anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
-                      <Menu.Item icon="truck" onPress={() => {
-                      }} title="Trucks"/>
-                      <Menu.Item icon="card-account-details-outline" onPress={() => {
-                      }} title="Drivers"/>
-                      <Menu.Item icon="package-variant" onPress={() => {
-                      }} title="Collections"/>
-                      <Menu.Item icon="package-variant-closed" onPress={() => {
-                      }} title="Closed Collections"/>
-                    </Menu>
-                  </Appbar.Header>
-                  <View style={styles.mainView}>
-                    <Route exact path="/" component={Login}/>
-                    <Route path="/register" component={Register}/>
-                    <Route path="/admin" component={Admin}/>
+      <UserProvider>
+        <SnackbarProvider>
+          <NativeRouter>
+            <PaperProvider theme={theme}>
+              {loaded ? (
+                  <View style={styles.container}>
+                    <Appbar.Header style={styles.appBar}>
+                      <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
+                      <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
+                      <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => testNotification()}/>
+                      <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
+                      <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
+                      <Menu
+                          visible={visible}
+                          onDismiss={closeMenu}
+                          anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
+                        <Menu.Item icon="truck" onPress={() => {
+                        }} title="Trucks"/>
+                        <Menu.Item icon="card-account-details-outline" onPress={() => {
+                        }} title="Drivers"/>
+                        <Menu.Item icon="package-variant" onPress={() => {
+                        }} title="Collections"/>
+                        <Menu.Item icon="package-variant-closed" onPress={() => {
+                        }} title="Closed Collections"/>
+                      </Menu>
+                    </Appbar.Header>
+                    <View style={styles.mainView}>
+                      <Route exact path="/" component={Login}/>
+                      <Route path="/register" component={Register}/>
+                      <Route path="/admin" component={Admin}/>
+                    </View>
+                    <SnackbarContainer />
                   </View>
-                </View>
-            ) : (
-                // splash screen goes here
-                <View style={styles.splashScreen}>
-                  <MainLogo/>
-                  <Text style={styles.splashScreenText}>Courier Platform</Text>
-                  <ActivityIndicator size="large" color="#95d600"/>
-                </View>
-            )}
+              ) : (
+                  // splash screen goes here
+                  <View style={styles.splashScreen}>
+                    <MainLogo/>
+                    <Text style={styles.splashScreenText}>Courier Platform</Text>
+                    <ActivityIndicator size="large" color="#95d600"/>
+                  </View>
+              )}
 
-          </PaperProvider>
-        </NativeRouter>
-      </UserContext>
+            </PaperProvider>
+          </NativeRouter>
+        </SnackbarProvider>
+      </UserProvider>
   );
 }
