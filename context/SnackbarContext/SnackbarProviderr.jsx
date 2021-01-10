@@ -18,6 +18,8 @@ class SnackbarProvider extends React.Component {
 
   showNotification(message, type) {
 
+    console.log(message,type)
+
     let msg = "";
     switch (message) {
       case "update":
@@ -44,6 +46,8 @@ class SnackbarProvider extends React.Component {
       case "warning":
         newVariant = type;
     }
+
+    console.log(newVariant, msg)
 
     this.setState({
       status: { visible: true, message: msg, variant: newVariant }

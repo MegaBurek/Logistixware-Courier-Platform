@@ -24,7 +24,7 @@ import Register from "./Register";
 import UserProvider from "./context/UserContext/UserProvider";
 import SnackbarProvider from "./context/SnackbarContext/SnackbarProviderr";
 import SnackbarContainer from "./context/SnackbarContext/SnackbarContainer";
-import SnackbarContext from "./context/SnackbarContext/SnackbarContext";
+import SnackbarConsumer from "./context/SnackbarContext/SnackbarConsumer";
 
 const fontConfig = {
   web: {
@@ -156,8 +156,6 @@ export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [visible, setVisible] = useState(false);
 
-  const snackbarContext = useContext(SnackbarContext);
-
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
@@ -183,9 +181,10 @@ export default function App() {
     console.log(userRef)
   }
 
-  const testNotification = () => {
+  const testNotification = (snackbarContext) => {
     console.log("clicked")
-    snackbarContext.showNotification("update","success")
+    console.log(snackbarContext)
+    snackbarContext.showNotification("update", "success");
   }
 
   const readTestCollection = async () => {
@@ -206,34 +205,38 @@ export default function App() {
           <NativeRouter>
             <PaperProvider theme={theme}>
               {loaded ? (
-                  <View style={styles.container}>
-                    <Appbar.Header style={styles.appBar}>
-                      <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
-                      <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
-                      <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => testNotification()}/>
-                      <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
-                      <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
-                      <Menu
-                          visible={visible}
-                          onDismiss={closeMenu}
-                          anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
-                        <Menu.Item icon="truck" onPress={() => {
-                        }} title="Trucks"/>
-                        <Menu.Item icon="card-account-details-outline" onPress={() => {
-                        }} title="Drivers"/>
-                        <Menu.Item icon="package-variant" onPress={() => {
-                        }} title="Collections"/>
-                        <Menu.Item icon="package-variant-closed" onPress={() => {
-                        }} title="Closed Collections"/>
-                      </Menu>
-                    </Appbar.Header>
-                    <View style={styles.mainView}>
-                      <Route exact path="/" component={Login}/>
-                      <Route path="/register" component={Register}/>
-                      <Route path="/admin" component={Admin}/>
-                    </View>
-                    <SnackbarContainer />
-                  </View>
+                  <SnackbarConsumer>
+                    {(snackbarContext) => (
+                        <View style={styles.container}>
+                          <Appbar.Header style={styles.appBar}>
+                            <Appbar.Content title="Logistixware" titleStyle={styles.titleText}/>
+                            <Appbar.Action icon="truck" color="white" onPress={() => console.log('Pressed')}/>
+                            <Appbar.Action icon="card-account-details-outline" color="white" onPress={() => testNotification(snackbarContext)}/>
+                            <Appbar.Action icon="package-variant" color="white" onPress={() => console.log('Pressed')}/>
+                            <Appbar.Action icon="package-variant-closed" color="white" onPress={() => console.log('Pressed')}/>
+                            <Menu
+                                visible={visible}
+                                onDismiss={closeMenu}
+                                anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={openMenu}/>}>
+                              <Menu.Item icon="truck" onPress={() => {
+                              }} title="Trucks"/>
+                              <Menu.Item icon="card-account-details-outline" onPress={() => {
+                              }} title="Drivers"/>
+                              <Menu.Item icon="package-variant" onPress={() => {
+                              }} title="Collections"/>
+                              <Menu.Item icon="package-variant-closed" onPress={() => {
+                              }} title="Closed Collections"/>
+                            </Menu>
+                          </Appbar.Header>
+                          <View style={styles.mainView}>
+                            <Route exact path="/" component={Login}/>
+                            <Route path="/register" component={Register}/>
+                            <Route path="/admin" component={Admin}/>
+                          </View>
+                          <SnackbarContainer/>
+                        </View>
+                    )}
+                  </SnackbarConsumer>
               ) : (
                   // splash screen goes here
                   <View style={styles.splashScreen}>
